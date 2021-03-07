@@ -1,7 +1,7 @@
 from Snake import *
 from Food import *
 from Board import *
-import pygame
+import pygame, time, sys
 
 pygame.init()
 
@@ -19,10 +19,23 @@ class Game:
                                                self.board.cell_size * self.board.cell_number))
 
     def drawObjects(self):
-        fruit_rect = pygame.Rect(self.food.position[0] * self.board.cell_size,
-                                 self.food.position[1] * self.board.cell_size,
-                                 self.board.cell_size, self.board.cell_size)
-        pygame.draw.rect(self.screen, APPLERED, fruit_rect)
+        while True:
+            food_on_snake = False
+            for element in self.snake.body:
+                if self.food.position == element:
+                    food_on_snake = True
+                    break
+                else:
+                    continue
+            if food_on_snake:
+                self.food = Food()
+                continue
+            else:
+                food_rect = pygame.Rect(self.food.position[0] * self.board.cell_size,
+                                        self.food.position[1] * self.board.cell_size,
+                                        self.board.cell_size, self.board.cell_size)
+                pygame.draw.rect(self.screen, APPLERED, food_rect)
+                break
 
         for part in self.snake.body:
             snake_body = pygame.Rect(part[0] * self.board.cell_size,
@@ -30,11 +43,46 @@ class Game:
                                      self.board.cell_size, self.board.cell_size)
             pygame.draw.rect(self.screen, SNAKEGREEN, snake_body)
 
+    def checkForGameOver(self):
+        # snake hit itself
+        if self.checkIfSnakeeatsItslef() or self.movingFromMap():
+            return True
+        else:
+            return False
+
+    def movingFromMap(self):
+        if self.snake.body[0][0] < 0 or self.snake.body[0][0] >= 20:
+            print("out of map x")
+            return True
+        elif self.snake.body[0][1] < 0 or self.snake.body[0][1] >= 20:
+            print("out of map y")
+            return True
+        else:
+            return False
+
+    def checkIfSnakeeatsItslef(self):
+        eatsitself = False
+        for element in self.snake.body[1:]:
+            if self.snake.body[0] == element:
+                print("u ate urself!")
+                eatsitself = True
+                break
+            else:
+                continue
+        return eatsitself
+
+    def endGame(self):
+        self.snake.moving = False
+        # print big Game Over sign
+        # new game or end (button?)
+        time.sleep(3)
+        sys.exit()
+
     def checkForCollision(self):
         if self.snake.body[0] == self.food.position:
-            self.handleCollision()
+            self.growSnake()
 
-    def handleCollision(self):
+    def growSnake(self):
         self.food = Food()
         newSnakePart = [self.snake.body[-1][0], self.snake.body[-1][1] + 1]
         self.snake.body.append(newSnakePart)
