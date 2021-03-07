@@ -1,4 +1,3 @@
-import sys
 from Game import *
 
 
@@ -41,13 +40,17 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        if snakeStartedMove:
+        if game.snake.moving:
             if event.type == SNAKE_UPDATE:
                 game.snake.updateSnake()
-                # check for win loss
+                # check for win
+                # check for loss
+                gameOver = game.checkForGameOver()
+                if gameOver:
+                    game.endGame()
                 game.checkForCollision()
         if event.type == pygame.KEYDOWN:
-            snakeStartedMove = True
+            game.snake.moving = True
             handleKeyPress()
     game.screen.fill(GRASSGREEN)
     game.drawObjects()
