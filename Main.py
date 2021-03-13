@@ -1,6 +1,5 @@
 from Game import *
 
-
 game = Game()
 
 clock = pygame.time.Clock()  # for FPS
@@ -39,6 +38,7 @@ def handleKeyPress():
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            pygame.quit()
             sys.exit()
         if game.snake.moving:
             if event.type == SNAKE_UPDATE:
@@ -57,4 +57,3 @@ while True:
     pygame.display.update()
     clock.tick(60)
 
-# https://www.youtube.com/watch?v=QFvqStqPCRU&t=2354s
