@@ -43,15 +43,21 @@ while True:
         if game.snake.moving:
             if event.type == SNAKE_UPDATE:
                 game.snake.updateSnake()
-                # check for win
-                # check for loss
                 gameOver = game.checkForGameOver()
                 if gameOver:
                     game.endGame()
-                game.checkForCollision()
+                    pygame.display.update()
+                game.checkAndHandleCollision()
         if event.type == pygame.KEYDOWN:
-            game.snake.moving = True
-            handleKeyPress()
+            if not game.snake.moving:
+                if event.key == pygame.K_DOWN:
+                    pass
+                else:
+                    game.snake.moving = True
+                    handleKeyPress()
+            else:
+                game.snake.moving = True
+                handleKeyPress()
     game.screen.fill(GRASSGREEN)
     game.drawObjects()
     pygame.display.update()

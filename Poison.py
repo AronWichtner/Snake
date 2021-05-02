@@ -1,6 +1,6 @@
 import random
 import pygame
-
+import os
 
 class Poison:
 
@@ -8,7 +8,7 @@ class Poison:
         self.x = self.gernerateRandomCoordinate()
         self.y = self.gernerateRandomCoordinate()
         self.position = [self.x, self.y]
-        self.graphics = pygame.image.load('Graphics/poison.png')
+        self.graphics = pygame.image.load(os.path.join('Graphics/poison.png'))
 
     def gernerateRandomCoordinate(self):
         x = random.randrange(0, 19)
